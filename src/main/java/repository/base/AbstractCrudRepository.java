@@ -2,10 +2,12 @@ package repository.base;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public abstract class AbstractCrudRepository<T> {
     protected EntityManager em;
 
