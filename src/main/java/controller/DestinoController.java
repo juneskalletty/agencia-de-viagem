@@ -1,6 +1,7 @@
 package controller;
 
 import model.Destino;
+import org.springframework.security.access.prepost.PreAuthorize;
 import service.DestinoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ public class DestinoController {
     private DestinoService destinoService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Destino> cadastrarDestino(@RequestBody Destino destino) {
         destinoService.salvar(destino);
         return ResponseEntity.ok(destino);
@@ -44,9 +46,9 @@ public class DestinoController {
     public ResponseEntity<String> reservarDestino(@PathVariable Integer id) {
         boolean reservado = destinoService.reservarDestino(id);
         if (reservado) {
-            return ResponseEntity.ok("Reserva realizada com sucesso.");
+            return ResponseEntity.ok("Reserva para o destino" + id + " realizada com sucesso.");
         }
-        return ResponseEntity.status(400).body("Destino não encontrado ou não disponível para reserva.");
+        return ResponseEntity.status(400).body("Destino" + id + " não encontrado ou não disponível para reserva.");
     }
 
     @PatchMapping("/{id}/avaliacao")
@@ -56,6 +58,7 @@ public class DestinoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> excluirDestino(@PathVariable Integer id) {
         Optional<Destino> destino = destinoService.buscarPorId(id);
         if (destino.isPresent()) {
